@@ -1,4 +1,4 @@
-import React from 'react'; import h from 'preact';
+import React from 'react';
 import {
   App,
   Panel,
@@ -19,17 +19,21 @@ import {
   ListButton,
   BlockFooter
 } from 'framework7-react';
+
 import routes from '../routes';
 
 export default function (props) {
 
   // Framework7 parameters here
   const f7params = {
-    id: 'io.framework7.testapp', // App bundle ID
-    name: 'Framework7', // App name
+    id: 'org.rapyd.client', // App bundle ID
+    name: 'App', // App name
     theme: 'auto', // Automatic theme detection
     // App routes
     routes,
+    panel: {
+      leftBreakpoint: 960,
+    },
   };
 
   return (
@@ -38,12 +42,12 @@ export default function (props) {
       <Statusbar />
 
       {/* Left Panel */}
-      <Panel left cover themeDark>
+      <Panel left reveal>
         <View url="/panel-left/" />
       </Panel>
 
       {/* Right Panel */}
-      <Panel right reveal themeDark>
+      <Panel right cover>
         <View url="/panel-right/"/>
       </Panel>
 

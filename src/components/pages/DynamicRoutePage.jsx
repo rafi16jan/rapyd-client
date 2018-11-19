@@ -1,4 +1,4 @@
-import React, { Component } from 'react'; import h from 'preact';
+import React, { Component } from 'react';
 import { Page, Navbar, Block, Link } from 'framework7-react';
 
 export default class DynamicRoutePage extends Component {

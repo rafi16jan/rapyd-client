@@ -1,4 +1,4 @@
-import React from 'react'; import h from 'preact';
+import React from 'react';
 import { Page, Navbar, Block } from 'framework7-react';
 
 export default () => (

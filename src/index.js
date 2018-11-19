@@ -1,5 +1,5 @@
 // Import React and ReactDOM
-import React from 'react'; import h from 'preact';
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 // Import Framework7
