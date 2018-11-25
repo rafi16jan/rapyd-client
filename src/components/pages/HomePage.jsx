@@ -15,16 +15,24 @@ import {
     Col,
     Button
 } from 'framework7-react';
+import LoginPage from './LoginPage';
+//import api from 'api';
 
-export default () => (
+export default function (props) {
+
+  if (window.models === undefined) {
+    return (<LoginPage/>);
+  }
+
+  return (
   <Page>
     <Navbar>
       <NavLeft>
-        <Link iconIos="f7:menu" iconMd="material:menu" panelOpen="left"></Link>
+        <Link iconMd="material:menu" panelOpen="left"></Link>
       </NavLeft>
-      <NavTitle>My App</NavTitle>
+      <NavTitle>Home</NavTitle>
       <NavRight>
-        <Link iconIos="f7:menu" iconMd="material:menu" panelOpen="right"></Link>
+        <Link iconMd="material:person" panelOpen="right"></Link>
       </NavRight>
     </Navbar>
     <Toolbar>
@@ -66,4 +74,5 @@ export default () => (
       <ListItem link="/load-something-that-doesnt-exist/" title="Default Route (404)"></ListItem>
     </List>
   </Page>
-);
+  );
+}

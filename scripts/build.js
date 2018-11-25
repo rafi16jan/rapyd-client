@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'production';
+process.env.NODE_PATH = './src';
 
 const config = require('react-scripts/config/webpack.config.prod');
 

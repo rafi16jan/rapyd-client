@@ -1,10 +1,9 @@
 import HomePage from './components/pages/HomePage';
 import AboutPage from './components/pages/AboutPage';
 import FormPage from './components/pages/FormPage';
-import DynamicRoutePage from './components/pages/DynamicRoutePage';
-import NotFoundPage from './components/pages/NotFoundPage';
-import PanelLeftPage from './components/pages/PanelLeftPage';
-import PanelRightPage from './components/pages/PanelRightPage';
+import NotFound from './components/pages/NotFound';
+import PanelLeft from './components/pages/PanelLeft';
+import PanelRight from './components/pages/PanelRight';
 
 export default [
   {
@@ -13,11 +12,11 @@ export default [
   },
   {
     path: '/panel-left/',
-    component: PanelLeftPage,
+    component: PanelLeft,
   },
   {
     path: '/panel-right/',
-    component: PanelRightPage,
+    component: PanelRight,
   },
   {
     path: '/about/',
@@ -28,11 +27,7 @@ export default [
     component: FormPage,
   },
   {
-    path: '/dynamic-route/blog/:blogId/post/:postId/',
-    component: DynamicRoutePage,
-  },
-  {
     path: '(.*)',
-    component: NotFoundPage,
+    component: NotFound,
   },
 ];

@@ -20,11 +20,16 @@ import './css/icons.css';
 // Custom app styles
 import './css/app.css';
 
+import api from 'api';
+
 // Init Framework7-React plugin
 Framework7.use(Framework7React);
 
 // Mount React App
-ReactDOM.render(
-  React.createElement(App),
-  document.getElementById('app'),
-);
+(async () => {
+  await api.get_session();
+  ReactDOM.render(
+    React.createElement(App),
+    document.getElementById('app'),
+  );
+})();

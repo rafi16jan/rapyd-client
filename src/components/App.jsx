@@ -22,6 +22,8 @@ import {
 
 import routes from '../routes';
 
+//import api from 'api';
+
 export default function (props) {
 
   // Framework7 parameters here
@@ -41,15 +43,17 @@ export default function (props) {
       {/* Statusbar */}
       <Statusbar />
 
-      {/* Left Panel */}
-      <Panel left reveal>
-        <View url="/panel-left/" />
-      </Panel>
+      { window.models !== undefined &&
+        <Panel left reveal>
+          <View url="/panel-left/" />
+        </Panel>
+      }
 
-      {/* Right Panel */}
-      <Panel right cover>
-        <View url="/panel-right/"/>
-      </Panel>
+      { window.models !== undefined &&
+        <Panel right cover>
+          <View url="/panel-right/"/>
+        </Panel>
+      }
 
       {/* Main View */}
       <View id="main-view" url="/" main className="ios-edges"/>
@@ -94,4 +98,4 @@ export default function (props) {
       </LoginScreen>
     </App>
   );
-};
+}
