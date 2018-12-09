@@ -8,7 +8,7 @@ window.PouchDB = PouchDB;
 window.session_db = new PouchDB('session');
 
 if (!window.localStorage.rapyd_server_url) {
-  window.localStorage.rapyd_server_url = window.location.protocol + '//' + window.location.hostname + ':8069';
+  window.localStorage.rapyd_server_url = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : ':8069');
 }
 
 function preload() {

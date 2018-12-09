@@ -3,6 +3,8 @@ process.env.NODE_PATH = './src';
 
 const config = require('react-scripts/config/webpack.config.dev');
 
+config.output.publicPath = '';
+
 config.resolve.alias['react'] = 'preact-compat';
 config.resolve.alias['react-dom'] = 'preact-compat';
 config.resolve.alias['pouchdb-promise'] = require('path').join(__dirname, '../node_modules/pouchdb-promise/lib/index.js');

@@ -110,10 +110,10 @@
   clear: both;
 }
 
-.item-label {
+.card-content .item-label {
   font-size: 15px !important;
 }
 
-.item-input-wrap {
+.card-content .item-input-wrap {
   width: 250px !important;
 }

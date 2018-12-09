@@ -4,6 +4,8 @@ process.env.NODE_PATH = './src';
 const config = require('react-scripts/config/webpack.config.prod');
 const OfflinePlugin = require('offline-plugin');
 
+config.output.publicPath = '';
+
 config.plugins.push(new OfflinePlugin());
 
 config.resolve.alias['react'] = 'preact-compat';

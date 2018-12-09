@@ -39,7 +39,7 @@ export default function (props) {
   };
 
   return (
-    <App params={f7params} colorTheme={window.tools.configuration.color_theme ? (window.tools && window.tools.configuration.color_theme) : 'gray'}>
+    <App params={f7params} colorTheme={(window.tools && window.tools.configuration.color_theme) ? (window.tools && window.tools.configuration.color_theme) : 'gray'}>
       {/* Statusbar */}
       <Statusbar />
 
