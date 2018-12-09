@@ -1,1 +1,1 @@
-window.rapydConfig = {};
+window.rapyd_config = {};
