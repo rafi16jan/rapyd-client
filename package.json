@@ -4,7 +4,7 @@
   "dependencies": {},
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "node scripts/build.js && mkdir build/static/css/static && cp -r build/static/media build/static/css/static",
     "copy-fonts": "node node_modules/.bin/cpy node_modules/framework7-icons/fonts/*.* src/fonts && node node_modules/.bin/cpy node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} src/fonts",
     "postinstall": "npm run copy-fonts && [ -d node_modules/framework7-react ] && cp patch/react-component-el.js node_modules/framework7-react/runtime-helpers/react-component-el.js && cp patch/list-input.js node_modules/framework7-react/components/"
   },
