@@ -63,8 +63,7 @@ export default class extends React.Component {
   }
   setUrl() {
     const app = this.$f7;
-    app.dialog.prompt('', 'Server URL', (url) => 
-localStorage.rapyd_server_url = url);
+    app.dialog.prompt('', 'Server URL', (url) => localStorage.rapyd_server_url = url);
     const input = document.querySelector('input.dialog-input');
     if (input) {
       input.value = localStorage.rapyd_server_url;
@@ -76,9 +75,12 @@ localStorage.rapyd_server_url = url);
     const app = self.$f7;
     //const router = self.$f7.router;
     try {
-      await api.login({login: self.state.username, password: self.state.password, encrypted: false});
+      const success = await api.login({login: self.state.username, password: self.state.password, encrypted: false});
       load.done();
-      app.dialog.alert('Login Successful!', async () => {
+      if (!success) {
+        return app.dialog.alert('Username/Password wrong, relogin');
+      }
+      app.dialog.alert('Login Successful!', () => {
         window.location.reload();
       });
     }

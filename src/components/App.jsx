@@ -30,7 +30,7 @@ export default function (props) {
   const f7params = {
     id: 'org.rapyd.client', // App bundle ID
     name: 'App', // App name
-    theme: 'auto', // Automatic theme detection
+    theme: 'md', // Automatic theme detection
     // App routes
     routes,
     panel: {
@@ -39,7 +39,7 @@ export default function (props) {
   };
 
   return (
-    <App params={f7params}>
+    <App params={f7params} colorTheme={window.tools.configuration.color_theme ? (window.tools && window.tools.configuration.color_theme) : 'gray'}>
       {/* Statusbar */}
       <Statusbar />
 
@@ -56,7 +56,7 @@ export default function (props) {
       }
 
       {/* Main View */}
-      <View id="main-view" url="/" main className="ios-edges"/>
+      <View id="main-view" url="/" main className="ios-edges" pushState/>
 
       {/* Popup */}
       <Popup id="popup">

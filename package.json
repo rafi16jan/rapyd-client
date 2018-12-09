@@ -6,21 +6,26 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "copy-fonts": "node node_modules/.bin/cpy node_modules/framework7-icons/fonts/*.* src/fonts && node node_modules/.bin/cpy node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} src/fonts",
-    "postinstall": "npm run copy-fonts && [ -d node_modules/framework7-react ] && cp patch/react-component-el.js node_modules/framework7-react/runtime-helpers/react-component-el.js"
+    "postinstall": "npm run copy-fonts && [ -d node_modules/framework7-react ] && cp patch/react-component-el.js node_modules/framework7-react/runtime-helpers/react-component-el.js && cp patch/list-input.js node_modules/framework7-react/components/"
   },
   "devDependencies": {
+    "@babel/preset-react": "^7.0.0",
+    "ag-grid-community": "^19.1.4",
+    "ag-grid-react": "^19.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "cpy-cli": "^2.0.0",
     "framework7": "^3.0.1",
     "framework7-icons": "^0.9.1",
     "framework7-react": "^3.0.1",
     "material-design-icons": "^3.0.1",
+    "offline-plugin": "^5.0.6",
     "pouchdb-browser": "^7.0.0",
     "pouchdb-find": "^7.0.0",
     "preact": "^8.3.1",
     "preact-compat": "^3.18.4",
     "react-scripts": "^2.1.1",
-    "relational-pouch": "^3.1.0"
+    "relational-pouch": "^3.1.0",
+    "string-replace-loader": "^2.1.1"
   },
   "browserslist": [
     ">0.2%",

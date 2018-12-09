@@ -1,5 +1,6 @@
 import HomePage from './components/pages/HomePage';
 import AboutPage from './components/pages/AboutPage';
+import TreePage from './components/pages/TreePage';
 import FormPage from './components/pages/FormPage';
 import NotFound from './components/pages/NotFound';
 import PanelLeft from './components/pages/PanelLeft';
@@ -23,7 +24,11 @@ export default [
     component: AboutPage,
   },
   {
-    path: '/form/',
+    path: '/tree/:model',
+    component: TreePage,
+  },
+  {
+    path: '/form/:model',
     component: FormPage,
   },
   {

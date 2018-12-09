@@ -39,11 +39,26 @@ async function get_session() {
     return {models: window.models, tools: window.tools, local_db: window.local_db};
   }
   try {
-    const session_object = await session_db.get('session');
+    let session_object = await session_db.get('session');
+    try {
+      const new_session = await login({login: session_object.login, password: session_object.password, encrypted: true, client_js_time: session_object.client_js_time});
+      if (!new_session) {
+        await logout();
+        window.location.reload();
+      }
+      else if (!new_session.client_js) {
+        new_session.client_js = session_object.client_js;
+      }
+      session_object = new_session;
+    }
+    catch(error) {
+      console.log(error);
+    }
     ORM(session_object);
     return {models: window.models, tools: window.tools, local_db: window.local_db};
   }
   catch(error) {
+    console.log(error);
     return {};
   }
 }
@@ -51,6 +66,12 @@ async function get_session() {
 async function login(args) {
   args.encrypted = args.encrypted ? true: false;
   const session = await ajax('post', 'json', window.localStorage.rapyd_server_url + '/api/login', args);
+  if (session.status === 'denied') {
+    return false;
+  }
+  else if (session.status === 'error') {
+    throw "There are an error on the server";
+  }
   try {
     const session_object = await window.session_db.get('session');
     session._rev = session_object._rev;
@@ -62,21 +83,43 @@ async function login(args) {
     session.unsaved = {};
   }
   session._id = 'session';
-  return window.session_db.put(session);
+  await window.session_db.put(session);
+  return session;
+}
+
+async function logout() {
+  try {
+    const session = await window.session_db.get('session');
+    await window.session_db.remove(session);
+  }
+  catch(error) {
+    console.log(error);
+  }
+  window.local_db.destroy();
+  return window.location.reload();
 }
 
 function ORM(session) {
-  window.localStorage.rapyd_server_url = session.url;
+  //window.localStorage.rapyd_server_url = session.url;
   // eslint-disable-next-line
   new Function(session.client_js)();
   const tools = window.tools;
-  tools.configuration.url = session.url;
+  tools.configuration.url = window.localStorage.rapyd_server_url;
   const models = window.models;
   models.env.context.unsaved = session.unsaved || {};
   models.env.user = models.env['res.users'].browse();
   models.env.user.id = session.id;
   models.env.user.login = session.login;
   models.env.user.password = session.password;
+  for (let model in tools.view) {
+    const views = tools.view[model];
+    for (let mode in views) {
+      if (hasValue(['id', 'string', 'custom_init'], mode)) {
+        continue;
+      }
+      views[mode] = views[mode].replace(/([a-z]*-[a-z]*[/>\s])|([a-z]*[/>\s])/g, (string) => string.split('-').map((word) => word.slice(0, 1).toUpperCase() + word.slice(1)).join('')).replace(/>\s+|\s+</g, (s) => s.trim());
+    }
+  }
 }
 
 function ajax(type, dataType, url, data) {
@@ -121,4 +164,21 @@ function parseURI(data) {
   return array.join('&');
 }
 
-export default {preload, get_session, login, ORM, ajax, parseURI};
+function hasKey(object, key) {
+  if (object === undefined || object === null || object === false) {
+    return false;
+  }
+  return Object.keys(object).indexOf(key) > -1;
+}
+
+function hasValue(object, value) {
+  if (object === undefined || object === null || object === false) {
+    return false;
+  }
+  if ([Array, String].indexOf(object.constructor) < 0) {
+    object = object.toString();
+  }
+  return object.indexOf(value) > -1;
+}
+
+export default {preload, get_session, login, logout, ORM, ajax, parseURI, hasValue, hasKey};

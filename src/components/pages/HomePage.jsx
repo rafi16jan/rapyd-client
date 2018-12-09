@@ -16,12 +16,25 @@ import {
     Button
 } from 'framework7-react';
 import LoginPage from './LoginPage';
+import TreePage from './TreePage';
+import FormPage from './FormPage';
 //import api from 'api';
 
 export default function (props) {
 
   if (window.models === undefined) {
     return (<LoginPage/>);
+  }
+  else if (window.tools.configuration.home_view) {
+    const mode = window.tools.configuration.home_view.split('.').slice(-1)[0];
+    const model = window.tools.configuration.home_view.split('.').slice(0, -1).join('.');
+    window.models.env.context.active_model = model;
+    if (mode === 'tree') {
+      return (<TreePage/>);
+    }
+    else if (mode === 'form') {
+      return (<FormPage/>);
+    }
   }
 
   return (

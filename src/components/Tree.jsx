@@ -1,24 +1,167 @@
 import React from 'react';
-import {
-    Page,
-    Navbar,
-    NavLeft,
-    NavTitle,
-    NavRight,
-    Link,
-} from 'framework7-react';
+import Page from './Page';
+import Grid from './Grid';
+import {Button} from 'framework7-react';
+import api from 'api';
 
-export default (props) => (
-  <Page>
-    <Navbar>
-      <NavLeft>
-        <Link iconMd="material:menu" panelOpen="left"></Link>
-      </NavLeft>
-      <NavTitle>Form</NavTitle>
-      <NavRight>
-        <Link iconMd="material:person" panelOpen="right"></Link>
-      </NavRight>
-    </Navbar>
-    {props.children}
-  </Page>
-);
+export default class extends React.Component {
+  constructor(props) {
+    super(props);
+
+    console.log(props);
+    
+    const model = window.models.env.context.active_model;
+    console.log(props);
+    const children = props.children.constructor === Array ? props.children : [props.children];
+    const fields = children.map((child, index) => ({headerName: (() => child.attributes.string || window.models.env[model]._fields[child.attributes.name].string)(), field: child.attributes.name, filterParams: {applyButton: true, clearButton: true}}));
+    fields[0].checkboxSelection = true;
+    fields[0].headerCheckboxSelection = true;
+    const records = [];
+    this.state = {fields: fields, records: records, limit: 50, model: model};
+  }
+
+  paginate(rows, index=0) {
+    if (rows.length < 1) {
+      return rows;
+    }
+    const count = rows[0]._search_count;
+    if (index > 0) {
+      let pushed = 0;
+      while (pushed < this.state.limit * index) {
+        rows.unshift({});
+        pushed += 1;
+      }
+    }
+    while (rows.length < count) {
+      rows.push({});
+    }
+    console.log(count);
+    return rows;
+  }
+
+  sort(fields, params) {
+    const models = window.models;
+    if (fields.length > 0) {
+      models.env.context.active_sort = fields[0].colId + ' ' + fields[0].sort;
+    }
+    else {
+      delete models.env.context.active_sort;
+    }
+    /*const load = api.preload();
+    try {
+      const records = await models.env[models.env.context.active_model].search([]);
+      let result = [];
+      if (records.length > 0) {
+        result = records.values.constructor === Array ? records.values : [records.values];
+      }
+      this.setState({records: result});
+    }
+    catch(error) {
+      console.log(error);
+    }
+    load.done();*/
+    if (params.api.paginationGetCurrentPage() !== 0) {
+      params.api.paginationGoToFirstPage();
+    }
+    else {
+      params.newData = false;
+      this.paging.bind(this)(0, params);
+    }
+  }
+
+  filter(fields, params) {
+    const models = window.models;
+    //const load = api.preload();
+    const args = [];
+    const values = [];
+    for (let field in fields) {
+      let conditions = [fields[field]];
+      let operator = 'AND';
+      if (fields[field].operator !== undefined) {
+        conditions = [fields[field].condition1, fields[field].condition2];
+        operator = fields[field].operator;
+      }
+      const types = {startsWith: 'ilike', endsWith: 'ilike', contains: 'ilike', notContains: 'not ilike', equals: '=', notEqual: '!='};
+      if (operator === 'OR') {
+        args.push('|');
+      }
+      for (let condition of conditions) {
+        /*if (operator === 'OR') {
+          args.push('|');
+        }*/
+        args.push([field, types[condition.type], condition.filter]);
+        values.push(condition.filter);
+      }
+    }
+    models.env.context.active_args = args;
+    /*try {
+      const records = await models.env[models.env.context.active_model].search(...args);
+      let result = [];
+      if (records.length > 0) {
+        result = records.values.constructor === Array ? records.values : [records.values];
+      }
+      this.setState({records: result});
+    }
+    catch(error) {
+      console.log(error);
+    }*/
+    let index = 0;
+    for (let input of window.document.getElementsByClassName('ag-filter-filter')) {
+      if (values[index] !== undefined) {
+        let value = values[index];
+        setTimeout(() => input.value = value, 1000);
+      }
+      index += 1;
+    }
+    //load.done();
+    if (params.api.paginationGetCurrentPage() !== 0) {
+      params.api.paginationGoToFirstPage();
+    }
+    else {
+      params.newData = false;
+      this.paging.bind(this)(0, params);
+    }
+  }
+
+  async paging(index, params) {
+    if (params.newData !== false) {
+      return;
+    }
+    const load = api.preload();
+    try {
+      const models = window.models;
+      const args = models.env.context.active_args || [];
+      models.env.context.active_limit = this.state.limit;
+      models.env.context.active_index = index;
+      const records = await models.env[models.env.context.active_model].search(...args);
+      console.log(records)
+      if (records.length > 0) {
+        this.setState({records: this.paginate(records.values.constructor === Array ? records.values : [records.values], index)})
+      }
+    }
+    catch(error) {
+      console.log(error);
+    }
+    load.done();
+  }
+
+  render() {
+    const model = window.models.env.context.active_model;
+    const models = window.models;
+    return (
+      <Page title={window.tools.view[model].string}>
+        <div className="card">
+          <div className="card-header">
+            <div className="data-table-title">
+              {window.tools.view[model].string}
+              <Button onClick={() => this.$f7.router.navigate('/form/' + model)} fill>Create</Button>
+            </div>
+          </div>
+          <div className="card-body" style={{height: this.state.records.length * 48 + 112 <= 440 ? this.state.records.length * 48 + 112 + 'px' : '67vh'}}>
+            <Grid onGridReady={(params) => (window.onresize = () => params.api.sizeColumnsToFit())()} onRowClicked={(params) => models.env[model].browse([]).then((record) => models.env.context.active_id = models.env[model].browse()).then(() => models.env.context.active_id.values = params.data).then(() => this.$f7.router.navigate('/form/' + model + '?id=' + params.data.id))} onPaginationChanged={(params) => this.paging.bind(this)(params.api.paginationGetCurrentPage(), params)} onSortChanged={(params) => this.sort.bind(this)(params.api.getSortModel(), params)} onFilterChanged={(params) => this.filter.bind(this)(params.api.getFilterModel(), params)} paginationPageSize={this.state.limit} columnDefs={this.state.fields} rowData={this.state.records}/>
+          </div>
+        </div>
+      </Page>
+    );
+  }
+}
