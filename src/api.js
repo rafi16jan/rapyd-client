@@ -8,7 +8,12 @@ window.PouchDB = PouchDB;
 window.session_db = new PouchDB('session');
 
 if (!window.localStorage.rapyd_server_url) {
-  window.localStorage.rapyd_server_url = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : ':8069');
+  if (window.rapyd_config.url) {
+    window.localStorage.rapyd_server_url = window.rapyd_config.url;
+  }
+  else {
+    window.localStorage.rapyd_server_url = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : ':8069');
+  }
 }
 
 function preload() {
@@ -104,6 +109,7 @@ function ORM(session) {
   // eslint-disable-next-line
   new Function(session.client_js)();
   const tools = window.tools;
+  tools.configuration = Object.assign(tools.configuration, window.rapyd_config);
   tools.configuration.url = window.localStorage.rapyd_server_url;
   const models = window.models;
   models.env.context.unsaved = session.unsaved || {};
