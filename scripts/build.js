@@ -10,7 +10,7 @@ const OfflinePlugin = require('offline-plugin');
 
 config.output.publicPath = '';
 
-config.plugins.push(new OfflinePlugin({appShell: 'index.html', relativePaths: true}));
+config.plugins.push(new OfflinePlugin({appShell: 'index.html', ServiceWorker: {prefetchRequest: {mode: 'no-cors'}}, relativePaths: true}));
 
 config.resolve.alias['react'] = 'preact-compat';
 config.resolve.alias['react-dom'] = 'preact-compat';
