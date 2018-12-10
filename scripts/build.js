@@ -17,5 +17,6 @@ config.resolve.alias['react-dom'] = 'preact-compat';
 config.resolve.alias['pouchdb-promise'] = require('path').join(__dirname, '../node_modules/pouchdb-promise/lib/index.js');
 
 config.module.rules.push({test: /framework7\.min\.css$/, loader: 'string-replace-loader', options: {search: '\#9e9e9e', replace: '#009688', flags: 'g'}});
+//config.module.rules.push({test: /sw\.js$/, loader: 'string-replace-loader', options: {search: ',e.respondWith\(f\)', replace: ';try{e.respondWith(f)}catch(error){}'}});
 
 require('react-scripts/scripts/build');
