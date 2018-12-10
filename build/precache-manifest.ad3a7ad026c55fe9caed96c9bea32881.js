@@ -56,7 +56,7 @@ self.__precacheManifest = [
     "url": "static/media/MaterialIcons-Regular.e79bfd88.eot"
   },
   {
-    "revision": "235f638b9f31290462b9aff0789b0049",
+    "revision": "835b29b35bfe12c5fb0326b859f2fedc",
     "url": "index.html"
   }
 ];

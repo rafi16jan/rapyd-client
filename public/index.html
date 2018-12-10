@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <script>document.write('<base href="' + window.location.pathname.replace(/[^/]*\.[a-zA-Z]*/, '') + '/">');</script>
+  <script>window.location.pathname.slice(-1) !== '/' && window.location.pathname.indexOf('.html') === -1 ? window.location.pathname += '/' : true;</script>
   <script>window.location.hash ? true : window.location.hash = '#!/';</script>
   <script src="config.js"></script>
   <meta charset="utf-8">
