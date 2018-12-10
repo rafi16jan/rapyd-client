@@ -1,3 +1,4 @@
+
 //require('module-alias/register');
 process.env.NODE_ENV = 'production';
 process.env.NODE_PATH = './src';
@@ -9,7 +10,7 @@ const OfflinePlugin = require('offline-plugin');
 
 config.output.publicPath = '';
 
-config.plugins.push(new OfflinePlugin({appShell: '/index.html', externals: ['/index.html'], relativePaths: true}));
+config.plugins.push(new OfflinePlugin({relativePaths: true}));
 
 config.resolve.alias['react'] = 'preact-compat';
 config.resolve.alias['react-dom'] = 'preact-compat';
