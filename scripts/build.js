@@ -9,7 +9,7 @@ const OfflinePlugin = require('offline-plugin');
 
 config.output.publicPath = '';
 
-config.plugins.push(new OfflinePlugin({appShell: 'index.html'}));
+config.plugins.push(new OfflinePlugin({appShell: 'index.html', externals: ['index.html'], relativePaths: true}));
 
 config.resolve.alias['react'] = 'preact-compat';
 config.resolve.alias['react-dom'] = 'preact-compat';
