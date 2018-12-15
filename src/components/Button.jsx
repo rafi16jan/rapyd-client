@@ -21,6 +21,6 @@ async function button(props) {
 export default (props) => {
 
   return (
-    <Button fill onClick={button.bind(this)(props)} style={{display: 'inline-block', margin: '10px'}}>{props.string}</Button>
+    <Button fill onClick={() => button.bind(this)(props)} style={{display: 'inline-block', margin: '10px'}}>{props.string}</Button>
   );
 }
