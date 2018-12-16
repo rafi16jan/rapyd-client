@@ -117,7 +117,7 @@ function ORM(session) {
   models.env.user.id = session.id;
   models.env.user.login = session.login;
   models.env.user.password = session.password;
-  for (let model in tools.view) {
+  /*for (let model in tools.view) {
     const views = tools.view[model];
     for (let mode in views) {
       if (hasValue(['id', 'string', 'custom_init'], mode)) {
@@ -125,7 +125,7 @@ function ORM(session) {
       }
       views[mode] = views[mode].replace(/([a-z]*-[a-z]*[/>\s])|([a-z]*[/>\s])/g, (string) => string.split('-').map((word) => word.slice(0, 1).toUpperCase() + word.slice(1)).join('')).replace(/>\s+|\s+</g, (s) => s.trim());
     }
-  }
+  }*/
 }
 
 function ajax(type, dataType, url, data) {

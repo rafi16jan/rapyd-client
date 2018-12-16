@@ -2,12 +2,28 @@ import React from 'react';
 //import Parser from 'react-jsx-parser';
 import Tree from '../Tree';
 import Field from '../Field';
-import {transform as Parser} from 'babel-core';
-import preset from '@babel/preset-react';
+//import {transform as Parser} from 'babel-core';
+//import preset from '@babel/preset-react';
 
-window.React = React;
-window.Tree = Tree;
-window.Field = Field;
+const customComponents = {Tree, Field};
+
+function parseView(view) {
+  view = new DOMParser().parseFromString(view, 'text/xml').children[0];
+  function recurse(elements) {
+    let components = [];
+    for (let element of elements) {
+      const component = customComponents[element.tagName[0].toUpperCase() + element.tagName.toLowerCase().slice(1)] || customComponents[element.tagName] || element.tagName;
+      const props = {};
+      for (let attribute of element.attributes) {
+        props[attribute.name] = attribute.value;
+      }
+      components.push(React.createElement(component, props, recurse(element.children)));
+    }
+    components = components.length === 1 ? components[0] : components;
+    return components
+  }
+  return recurse([view]);
+}
 
 const cachedViews = {};
 
@@ -25,7 +41,8 @@ export default (props) => {
 
   if (!cachedViews[view]) {
     // eslint-disable-next-line
-    cachedViews[view] = eval(Parser(view, {presets: [preset]}).code);
+    //cachedViews[view] = evals(Parser(view, {presets: [preset]}).code);
+    cachedViews[view] = parseView(view);
   }
 
   return cachedViews[view];

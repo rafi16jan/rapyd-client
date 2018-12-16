@@ -9,7 +9,6 @@
     "postinstall": "npm run copy-fonts && [ -d node_modules/framework7-react ] && cp patch/react-component-el.js node_modules/framework7-react/runtime-helpers/react-component-el.js && cp patch/list-input.js node_modules/framework7-react/components/"
   },
   "devDependencies": {
-    "@babel/preset-react": "^7.0.0",
     "ag-grid-community": "^19.1.4",
     "ag-grid-react": "^19.1.2",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
