@@ -26,6 +26,10 @@ export default class extends React.Component {
     fields[0].headerCheckboxSelection = true;
     const records = [];
     this.state = {fields: fields, records: records, limit: 50, model: model};
+    window.c = props;
+    if (props.field) {
+      this.state.tree_field = props.field;
+    }
   }
 
   paginate(rows, index=0) {
@@ -57,7 +61,11 @@ export default class extends React.Component {
     }
     /*const load = api.preload();
     try {
-      const records = await models.env[models.env.context.active_model].search([]);
+      const args = [];
+      if (this.state.tree_field) {
+        args.push([this.state.tree_field, 'in', window.models.env.context.active_ids]);
+      }
+      const records = await models.env[models.env.context.active_model].search(...args);
       let result = [];
       if (records.length > 0) {
         result = records.values.constructor === Array ? records.values : [records.values];
@@ -80,7 +88,7 @@ export default class extends React.Component {
   filter(fields, params) {
     const models = window.models;
     //const load = api.preload();
-    const args = [];
+    const args = this.state.tree_field ? [[this.state.tree_field, 'in', window.models.env.context.active_ids]] : [];
     const values = [];
     for (let field in fields) {
       let conditions = [fields[field]];
@@ -138,7 +146,7 @@ export default class extends React.Component {
     const load = api.preload();
     try {
       const models = window.models;
-      const args = models.env.context.active_args || [];
+      const args = models.env.context.active_args || (this.state.tree_field ? [[this.state.tree_field, 'in', window.models.env.context.active_ids]] : []);
       models.env.context.active_limit = this.state.limit;
       models.env.context.active_index = index;
       const records = await models.env[this.state.model].search(...args);

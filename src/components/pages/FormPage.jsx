@@ -24,6 +24,7 @@ function parseView(view, model) {
       }
       if (component === Tree) {
         props.model = window.models.env[model]._fields[parent_props.name].relation;
+        props.field = window.models.env[model]._fields[parent_props.name].inverse;
       }
       components.push(React.createElement(component, props, recurse(element.children, props)));
     }

@@ -36,15 +36,15 @@ Framework7.use(Framework7React);
     React.createElement(App),
     document.getElementById('app'),
   );
+  if (window.tools && window.tools.configuration.custom_navbar) {
+    var style = document.createElement('style');
+    style.innerHTML = '.navbar {background-color: ' + window.tools.configuration.custom_navbar + '!important}';
+    document.querySelector('head').append(style);
+  }
   if (document.querySelector('div.navbar')) {
     const color_element = document.createElement('meta');
     color_element.name = 'theme-color';
     color_element.content = '#' + getComputedStyle(document.querySelector('.navbar'), null).backgroundColor.replace('rgb(', '').replace(')', '').split(', ').map(function(c) {return parseInt(c).toString(16)}).map(function(hex) {return hex.length === 1 ? "0" + hex : hex}).join('');
     document.querySelector('head').appendChild(color_element);
-  }
-  if (window.tools && window.tools.configuration.custom_navbar) {
-    var style = document.createElement('style');
-    style.innerHTML = '.navbar {background-color: ' + window.tools.configuration.custom_navbar + '!important}';
-    document.querySelector('head').append(style);
   }
 })();
