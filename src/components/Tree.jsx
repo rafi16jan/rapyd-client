@@ -10,14 +10,16 @@ export default class extends React.Component {
 
     console.log(props);
     
-    const model = window.models.env.context.active_model;
-    console.log(props);
+    const model = props.model || window.models.env.context.active_model;
     const children = props.children.constructor === Array ? props.children : [props.children];
     function isEditable() {
       if (props.isTreeView && !props.editable) {
         return false;
       }
-      return true;
+      if (window.models.env.context.editing) {
+        return true;
+      }
+      return false;
     }
     const fields = children.map((child, index) => ({headerName: (() => child.attributes.string || window.models.env[model]._fields[child.attributes.name].string)(), field: child.attributes.name, filterParams: {applyButton: true, clearButton: true}, editable: isEditable}));
     fields[0].checkboxSelection = true;
@@ -139,7 +141,7 @@ export default class extends React.Component {
       const args = models.env.context.active_args || [];
       models.env.context.active_limit = this.state.limit;
       models.env.context.active_index = index;
-      const records = await models.env[models.env.context.active_model].search(...args);
+      const records = await models.env[this.state.model].search(...args);
       console.log(records)
       if (records.length > 0) {
         this.setState({records: this.paginate(records.values.constructor === Array ? records.values : [records.values], index)})
@@ -152,10 +154,12 @@ export default class extends React.Component {
   }
 
   render(props) {
-    const model = window.models.env.context.active_model;
+    const model = props.model || window.models.env.context.active_model;
     const models = window.models;
     const grid = (
-      <Grid onGridReady={(params) => (window.onresize = () => params.api.sizeColumnsToFit())()} onRowClicked={(params) => models.env[model].browse([]).then((record) => models.env.context.active_id = models.env[model].browse()).then(() => models.env.context.active_id.values = params.data).then(() => this.$f7.router.navigate('/form/' + model + '?id=' + params.data.id))} onPaginationChanged={(params) => this.paging.bind(this)(params.api.paginationGetCurrentPage(), params)} onSortChanged={(params) => this.sort.bind(this)(params.api.getSortModel(), params)} onFilterChanged={(params) => this.filter.bind(this)(params.api.getFilterModel(), params)} paginationPageSize={this.state.limit} columnDefs={this.state.fields} rowData={this.state.records}/>
+      <div className="card-body" style={{height: this.state.records.length * 48 + 112 <= 440 ? this.state.records.length * 48 + 112 + 'px' : '67vh'}}>
+        <Grid onGridReady={(params) => (window.onresize = () => params.api.sizeColumnsToFit())()} onRowClicked={(params) => models.env[model].browse([]).then((record) => models.env.context.active_id = models.env[model].browse()).then(() => models.env.context.active_id.values = params.data).then(() => this.$f7.router.navigate('/form/' + model + '?id=' + params.data.id))} onPaginationChanged={(params) => this.paging.bind(this)(params.api.paginationGetCurrentPage(), params)} onSortChanged={(params) => this.sort.bind(this)(params.api.getSortModel(), params)} onFilterChanged={(params) => this.filter.bind(this)(params.api.getFilterModel(), params)} paginationPageSize={this.state.limit} columnDefs={this.state.fields} rowData={this.state.records}/>
+      </div>
     );
     //delete grid.props.onRowClicked;
     if (!props.isTreeView) {
@@ -168,12 +172,11 @@ export default class extends React.Component {
           <div className="card-header">
             <div className="data-table-title">
               {window.tools.view[model].string}
-              <Button onClick={() => this.$f7.router.navigate('/form/' + model)} fill>Create</Button>
+              <br/>
+              <Button onClick={() => this.$f7.router.navigate('/form/' + model)} style={{display: 'inline-block'}} fill>Create</Button>
             </div>
           </div>
-          <div className="card-body" style={{height: this.state.records.length * 48 + 112 <= 440 ? this.state.records.length * 48 + 112 + 'px' : '67vh'}}>
-            {grid}
-          </div>
+          {grid}
         </div>
       </Page>
     );

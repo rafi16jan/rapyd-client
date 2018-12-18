@@ -3,7 +3,7 @@ import {
     List,
     ListInput,
 } from 'framework7-react';
-//import api from 'api';
+import api from 'api';
 
 export default class extends React.Component {
   /*constructor(props) {
@@ -16,7 +16,9 @@ export default class extends React.Component {
     const context = window.models.env.context;
     const value = context.active_id && context.active_id[this.props.name];
     console.log(window.models.env.context.active_id);
-    this.refs.input.$listEl[0].querySelector('input').value = value;
+    if (this.refs.input) {
+      this.refs.input.$listEl[0].querySelector('input').value = value;
+    }
   }
 
   render(props) {
@@ -26,6 +28,10 @@ export default class extends React.Component {
     const type = field.type;
     const types = {char: 'text', text: 'textarea', float: 'number', integer: 'number'};
     const context = window.models.env.context;
+
+    if (api.hasValue(['many2many', 'one2many'], type) && props.children) {
+      return props.children;
+    }
 
     return (
       <List>

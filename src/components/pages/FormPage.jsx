@@ -5,15 +5,16 @@ import Button from '../Button';
 import Sheet from '../Sheet';
 import Group from '../Group';
 import Field from '../Field';
+import Tree from '../Tree';
 import Footer from '../Footer';
 //import {transform as Parser} from 'babel-core';
 //import preset from '@babel/preset-react';
 
-const customComponents = {Form, Header, Button, Sheet, Group, Field, Footer};
+const customComponents = {Form, Header, Button, Sheet, Group, Field, Tree, Footer};
 
-function parseView(view) {
+function parseView(view, model) {
   view = new DOMParser().parseFromString(view, 'text/xml').children[0];
-  function recurse(elements) {
+  function recurse(elements, parent_props) {
     let components = [];
     for (let element of elements) {
       const component = customComponents[element.tagName[0].toUpperCase() + element.tagName.toLowerCase().slice(1)] || customComponents[element.tagName] || element.tagName;
@@ -21,7 +22,10 @@ function parseView(view) {
       for (let attribute of element.attributes) {
         props[attribute.name] = attribute.value;
       }
-      components.push(React.createElement(component, props, recurse(element.children)));
+      if (component === Tree) {
+        props.model = window.models.env[model]._fields[parent_props.name].relation;
+      }
+      components.push(React.createElement(component, props, recurse(element.children, props)));
     }
     components = components.length === 1 ? components[0] : components;
     return components
@@ -49,7 +53,7 @@ export default (props) => {
   if (!cachedViews[view]) {
     // eslint-disable-next-line
     //cachedViews[view] = eval(Parser(view, {presets: [preset]}).code);
-    cachedViews[view] = parseView(view);
+    cachedViews[view] = parseView(view, model);
   }
 
   return cachedViews[view];
