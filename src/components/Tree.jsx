@@ -13,7 +13,13 @@ export default class extends React.Component {
     const model = window.models.env.context.active_model;
     console.log(props);
     const children = props.children.constructor === Array ? props.children : [props.children];
-    const fields = children.map((child, index) => ({headerName: (() => child.attributes.string || window.models.env[model]._fields[child.attributes.name].string)(), field: child.attributes.name, filterParams: {applyButton: true, clearButton: true}}));
+    function isEditable() {
+      if (props.isTreeView && !props.editable) {
+        return false;
+      }
+      return true;
+    }
+    const fields = children.map((child, index) => ({headerName: (() => child.attributes.string || window.models.env[model]._fields[child.attributes.name].string)(), field: child.attributes.name, filterParams: {applyButton: true, clearButton: true}, editable: isEditable}));
     fields[0].checkboxSelection = true;
     fields[0].headerCheckboxSelection = true;
     const records = [];
@@ -145,9 +151,17 @@ export default class extends React.Component {
     load.done();
   }
 
-  render() {
+  render(props) {
     const model = window.models.env.context.active_model;
     const models = window.models;
+    const grid = (
+      <Grid onGridReady={(params) => (window.onresize = () => params.api.sizeColumnsToFit())()} onRowClicked={(params) => models.env[model].browse([]).then((record) => models.env.context.active_id = models.env[model].browse()).then(() => models.env.context.active_id.values = params.data).then(() => this.$f7.router.navigate('/form/' + model + '?id=' + params.data.id))} onPaginationChanged={(params) => this.paging.bind(this)(params.api.paginationGetCurrentPage(), params)} onSortChanged={(params) => this.sort.bind(this)(params.api.getSortModel(), params)} onFilterChanged={(params) => this.filter.bind(this)(params.api.getFilterModel(), params)} paginationPageSize={this.state.limit} columnDefs={this.state.fields} rowData={this.state.records}/>
+    );
+    //delete grid.props.onRowClicked;
+    if (!props.isTreeView) {
+      delete grid.props.onRowClicked;
+      return grid;
+    }
     return (
       <Page title={window.tools.view[model].string}>
         <div className="card">
@@ -158,7 +172,7 @@ export default class extends React.Component {
             </div>
           </div>
           <div className="card-body" style={{height: this.state.records.length * 48 + 112 <= 440 ? this.state.records.length * 48 + 112 + 'px' : '67vh'}}>
-            <Grid onGridReady={(params) => (window.onresize = () => params.api.sizeColumnsToFit())()} onRowClicked={(params) => models.env[model].browse([]).then((record) => models.env.context.active_id = models.env[model].browse()).then(() => models.env.context.active_id.values = params.data).then(() => this.$f7.router.navigate('/form/' + model + '?id=' + params.data.id))} onPaginationChanged={(params) => this.paging.bind(this)(params.api.paginationGetCurrentPage(), params)} onSortChanged={(params) => this.sort.bind(this)(params.api.getSortModel(), params)} onFilterChanged={(params) => this.filter.bind(this)(params.api.getFilterModel(), params)} paginationPageSize={this.state.limit} columnDefs={this.state.fields} rowData={this.state.records}/>
+            {grid}
           </div>
         </div>
       </Page>
