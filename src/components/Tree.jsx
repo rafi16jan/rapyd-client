@@ -4,6 +4,20 @@ import Grid from './Grid';
 import {Button} from 'framework7-react';
 import api from 'api';
 
+function autoSizeAll(gridOptions) {
+  var allColumnIds = [];
+  let first = true;
+  gridOptions.columnApi.getAllColumns().forEach(function(column) {
+    if (first) {
+      first = false;
+      return;
+    }
+    allColumnIds.push(column.colId);
+  });
+  gridOptions.api.sizeColumnsToFit();
+  gridOptions.columnApi.autoSizeColumns(allColumnIds);
+}
+
 export default class extends React.Component {
   constructor(props) {
     super(props);
@@ -166,7 +180,7 @@ export default class extends React.Component {
     const models = window.models;
     const grid = (
       <div className="card-body" style={{height: this.state.records.length * 48 + 112 <= 440 ? this.state.records.length * 48 + 112 + 'px' : '67vh'}}>
-        <Grid onGridReady={(params) => (window.onresize = () => params.api.sizeColumnsToFit())()} onRowClicked={(params) => models.env[model].browse([]).then((record) => models.env.context.active_id = models.env[model].browse()).then(() => models.env.context.active_id.values = params.data).then(() => this.$f7.router.navigate('/form/' + model + '?id=' + params.data.id))} onPaginationChanged={(params) => this.paging.bind(this)(params.api.paginationGetCurrentPage(), params)} onSortChanged={(params) => this.sort.bind(this)(params.api.getSortModel(), params)} onFilterChanged={(params) => this.filter.bind(this)(params.api.getFilterModel(), params)} paginationPageSize={this.state.limit} columnDefs={this.state.fields} rowData={this.state.records}/>
+        <Grid onGridReady={(params) => (window.onresize = () => autoSizeAll(params))()} onRowClicked={(params) => models.env[model].browse([]).then((record) => models.env.context.active_id = models.env[model].browse()).then(() => models.env.context.active_id.values = params.data).then(() => this.$f7.router.navigate('/form/' + model + '?id=' + params.data.id))} onPaginationChanged={(params) => this.paging.bind(this)(params.api.paginationGetCurrentPage(), params)} onSortChanged={(params) => this.sort.bind(this)(params.api.getSortModel(), params)} onFilterChanged={(params) => this.filter.bind(this)(params.api.getFilterModel(), params)} paginationPageSize={this.state.limit} columnDefs={this.state.fields} rowData={this.state.records}/>
       </div>
     );
     //delete grid.props.onRowClicked;
