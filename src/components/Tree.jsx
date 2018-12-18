@@ -8,13 +8,13 @@ function autoSizeAll(gridOptions) {
   var allColumnIds = [];
   let first = true;
   gridOptions.columnApi.getAllColumns().forEach(function(column) {
-    if (first) {
+    /*if (first) {
       first = false;
       return;
-    }
+    }*/
     allColumnIds.push(column.colId);
   });
-  gridOptions.api.sizeColumnsToFit();
+  //gridOptions.api.sizeColumnsToFit();
   gridOptions.columnApi.autoSizeColumns(allColumnIds);
 }
 
