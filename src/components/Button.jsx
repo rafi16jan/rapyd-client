@@ -15,12 +15,19 @@ async function button(props) {
       load.done();
     }
   }
+  await window.models.env.context.refresh();
   load.done();
 }
 
-export default (props) => {
+export default class extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = window.models.env.context;
+  }
 
-  return (
-    <Button fill onClick={() => button.bind(this)(props)} style={{display: 'inline-block', margin: '10px'}}>{props.string}</Button>
-  );
+  render(props) {
+    return (
+      <Button fill onClick={() => button.bind(this)(props)} style={{display: 'inline-block', margin: '10px'}}>{props.string}</Button>
+    );
+  }
 }

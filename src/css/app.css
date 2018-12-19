@@ -74,13 +74,13 @@
   background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE2IDBIMmEyIDIgMCAwIDAtMiAydjE0YTIgMiAwIDAgMCAyIDJoMTRhMiAyIDAgMCAwIDItMlYyYTIgMiAwIDAgMC0yLTJ6TTcgMTRMMiA5bDEuNDEtMS40MUw3IDExLjE3bDcuNTktNy41OUwxNiA1bC05IDl6IiBmaWxsPSIjMzMzIi8+PC9zdmc+);
 }
 
-.ag-theme-material .ag-header-row {
+/*.ag-theme-material .ag-header-row {
   width: 100% !important;
-}
+}*/
 
-.ag-body-container {
+/*.ag-body-container {
   width: 100% !important;
-}
+}*/
 
 .ag-theme-material .ag-cell {
   outline: none;
@@ -123,6 +123,10 @@
   transition: opacity 0.2s ease 0s, border 0.2s ease 0s !important;
 }
 
-.ag-header-cell-resize {
+/*.ag-header-cell-resize {
   padding-left: 15px;
-}
+}*/
+
+/*.ag-row, .ag-header-row {
+  width: 150% !important;
+}*/

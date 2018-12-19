@@ -14,8 +14,16 @@ function autoSizeAll(gridOptions) {
     }
     allColumnIds.push(column.colId);
   });*/
-  gridOptions.api.sizeColumnsToFit();
-  //gridOptions.columnApi.autoSizeColumns([gridOptions.columnApi.getAllColumns()[0].colId]);//(allColumnIds);
+  let grid = gridOptions.api
+  let panel = grid['gridPanel'];
+  let availableWidth = grid['gridPanel'].getWidthForSizeColsToFit();
+  let columns = grid['gridPanel']['columnController'].getAllDisplayedColumns();
+  let usedWidth = grid['gridPanel']['columnController'].getWidthOfColsInList(columns);
+  if (usedWidth < availableWidth) {
+    grid.sizeColumnsToFit();
+  }
+  //gridOptions.api.sizeColumnsToFit();
+  //gridOptions.columnApi.autoSizeColumns(allColumnIds);
 }
 
 export default class extends React.Component {
@@ -36,7 +44,7 @@ export default class extends React.Component {
     const fields = children.map((child, index) => ({headerName: (() => child.attributes.string || window.models.env[model]._fields[child.attributes.name].string)(), field: child.attributes.name, filterParams: {applyButton: true, clearButton: true}, editable: isEditable}));
     fields[0].checkboxSelection = true;
     fields[0].headerCheckboxSelection = true;
-    fields[0].suppressSizeToFit = true;
+    //fields[0].suppressSizeToFit = true;
     const records = [];
     this.state = {fields: fields, records: records, limit: 50, model: model};
     window.c = props;

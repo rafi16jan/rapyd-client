@@ -26,7 +26,9 @@ export default class extends React.Component {
     else if (!models.env.context.active_id) {
       models.env.context.active_id = await models.env[model].browse(models.env.context.active_ids);
     }
-    this.setState({active_id: models.env.context.active_id})
+    const refresh = () => this.setState({active_id: models.env.context.active_id});
+    models.env.context.refresh = refresh;
+    refresh()
   }
 
   async edit() {
