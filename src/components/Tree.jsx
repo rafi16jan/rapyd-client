@@ -5,25 +5,23 @@ import {Button} from 'framework7-react';
 import api from 'api';
 
 function autoSizeAll(gridOptions) {
-  var allColumnIds = [];
+  /*var allColumnIds = [];
   let first = true;
   gridOptions.columnApi.getAllColumns().forEach(function(column) {
-    /*if (first) {
+    if (first) {
       first = false;
       return;
-    }*/
+    }
     allColumnIds.push(column.colId);
-  });
-  //gridOptions.api.sizeColumnsToFit();
-  gridOptions.columnApi.autoSizeColumns(allColumnIds);
+  });*/
+  gridOptions.api.sizeColumnsToFit();
+  //gridOptions.columnApi.autoSizeColumns([gridOptions.columnApi.getAllColumns()[0].colId]);//(allColumnIds);
 }
 
 export default class extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log(props);
-    
     const model = props.model || window.models.env.context.active_model;
     const children = props.children.constructor === Array ? props.children : [props.children];
     function isEditable() {
@@ -38,6 +36,7 @@ export default class extends React.Component {
     const fields = children.map((child, index) => ({headerName: (() => child.attributes.string || window.models.env[model]._fields[child.attributes.name].string)(), field: child.attributes.name, filterParams: {applyButton: true, clearButton: true}, editable: isEditable}));
     fields[0].checkboxSelection = true;
     fields[0].headerCheckboxSelection = true;
+    fields[0].suppressSizeToFit = true;
     const records = [];
     this.state = {fields: fields, records: records, limit: 50, model: model};
     window.c = props;
@@ -61,7 +60,6 @@ export default class extends React.Component {
     while (rows.length < count) {
       rows.push({});
     }
-    console.log(count);
     return rows;
   }
 
@@ -164,7 +162,6 @@ export default class extends React.Component {
       models.env.context.active_limit = this.state.limit;
       models.env.context.active_index = index;
       const records = await models.env[this.state.model].search(...args);
-      console.log(records)
       if (records.length > 0) {
         this.setState({records: this.paginate(records.values.constructor === Array ? records.values : [records.values], index)})
       }
@@ -183,9 +180,9 @@ export default class extends React.Component {
         <Grid onGridReady={(params) => (window.onresize = () => autoSizeAll(params))()} onRowClicked={(params) => models.env[model].browse([]).then((record) => models.env.context.active_id = models.env[model].browse()).then(() => models.env.context.active_id.values = params.data).then(() => this.$f7.router.navigate('/form/' + model + '?id=' + params.data.id))} onPaginationChanged={(params) => this.paging.bind(this)(params.api.paginationGetCurrentPage(), params)} onSortChanged={(params) => this.sort.bind(this)(params.api.getSortModel(), params)} onFilterChanged={(params) => this.filter.bind(this)(params.api.getFilterModel(), params)} paginationPageSize={this.state.limit} columnDefs={this.state.fields} rowData={this.state.records}/>
       </div>
     );
-    //delete grid.props.onRowClicked;
+    //delete grid.props.children[0].props.onRowClicked;
     if (!props.isTreeView) {
-      delete grid.props.onRowClicked;
+      delete grid.props.children[0].props.onRowClicked;
       return grid;
     }
     return (
