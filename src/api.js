@@ -75,7 +75,7 @@ async function login(args) {
     return false;
   }
   else if (session.status === 'error') {
-    throw "There are an error on the server";
+    throw Error("There are an error on the server");
   }
   try {
     const session_object = await window.session_db.get('session');

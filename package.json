@@ -1,12 +1,15 @@
 {
   "name": "rapyd-client",
   "version": "1.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "rc-input-number": "^4.3.7",
+    "react-image-mapper": "0.0.8"
+  },
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js && mkdir build/static/css/static && cp -r build/static/media build/static/css/static && sed -i 's/,e.respondWith(f)/;try{e.respondWith(f)}catch(error){}/g' build/sw.js",
-    "copy-fonts": "node node_modules/.bin/cpy node_modules/framework7-icons/fonts/*.* src/fonts && node node_modules/.bin/cpy node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} src/fonts",
-    "postinstall": "npm run copy-fonts && [ -d node_modules/framework7-react ] && cp patch/react-component-el.js node_modules/framework7-react/runtime-helpers/react-component-el.js && cp patch/list-input.js node_modules/framework7-react/components/"
+    "copy-fonts": "node node_modules/cpy-cli/cli.js node_modules/framework7-icons/fonts/*.* src/fonts && node node_modules/cpy-cli/cli.js node_modules/material-design-icons/iconfont/*.{eot,ttf,woff,woff2} src/fonts",
+    "postinstall": "npm run copy-fonts && cp node_modules/preact/dist/preact.min.js public/ && cp node_modules/preact-compat/dist/preact-compat.min.js public/ && cp patch/react-component-el.js node_modules/framework7-react/runtime-helpers/react-component-el.js && cp patch/list-input.js node_modules/framework7-react/components/"
   },
   "devDependencies": {
     "ag-grid-community": "^19.1.4",
@@ -25,6 +28,8 @@
     "preact-compat": "^3.18.4",
     "react-scripts": "^2.1.1",
     "relational-pouch": "^3.1.0",
+    "selectivity": "^3.1.0",
+    "socket.io-client": "^2.2.0",
     "string-replace-loader": "^2.1.1"
   },
   "browserslist": [

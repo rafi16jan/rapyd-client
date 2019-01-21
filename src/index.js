@@ -8,8 +8,12 @@ import Framework7 from 'framework7/framework7.esm.bundle';
 // Import Framework7-React plugin
 import Framework7React from 'framework7-react';
 
+import * as Framework7Components from 'framework7-react';
+
 // Import main App component
 import App from './components/App.jsx';
+
+import Page from './components/Page.jsx';
 
 // Framework7 styles
 import 'framework7/css/framework7.min.css';
@@ -29,6 +33,11 @@ OfflinePluginRuntime.install();
 // Init Framework7-React plugin
 Framework7.use(Framework7React);
 
+window.React = React;
+window.ReactDOM = ReactDOM;
+
+window.rapydComponents = {...window.rapydComponents, ...Framework7Components, Page};
+
 // Mount React App
 (async () => {
   await api.get_session();
@@ -38,7 +47,7 @@ Framework7.use(Framework7React);
   );
   if (window.tools && window.tools.configuration.custom_navbar) {
     var style = document.createElement('style');
-    style.innerHTML = '.navbar {background-color: ' + window.tools.configuration.custom_navbar + '!important}';
+    style.innerHTML = '.navbar, .toolbar {background-color: ' + window.tools.configuration.custom_navbar + '!important}';
     document.querySelector('head').append(style);
   }
   if (document.querySelector('div.navbar')) {

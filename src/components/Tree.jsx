@@ -15,7 +15,7 @@ function autoSizeAll(gridOptions) {
     allColumnIds.push(column.colId);
   });*/
   let grid = gridOptions.api
-  let panel = grid['gridPanel'];
+  //let panel = grid['gridPanel'];
   let availableWidth = grid['gridPanel'].getWidthForSizeColsToFit();
   let columns = grid['gridPanel']['columnController'].getAllDisplayedColumns();
   let usedWidth = grid['gridPanel']['columnController'].getWidthOfColsInList(columns);

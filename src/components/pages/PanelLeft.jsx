@@ -10,14 +10,14 @@ export default () => (
       {window.tools.keys(window.tools.menu, 'sequence').as_array().map((menu, index) => (
       <ul>
         <li className="accordion-item">
-          <a className={'item-link item-content' + (window.tools.menu[menu].childs.length < 1 ? ' panel-close' : '')} href={window.tools.menu[menu].childs.length < 1 && '/tree/' + window.tools.menu[menu].model} data-view="#main-view">
+          <a className={'item-link item-content' + (window.tools.menu[menu].childs.length < 1 ? ' panel-close' : '')} href={window.tools.menu[menu].childs.length < 1 && '/' + (window.tools.menu[menu].view_id ? 'view' : 'tree') + '/' + (window.tools.menu[menu].view_id || window.tools.menu[menu].model)} data-view="#main-view">
             <div className="item-inner">
               <div className="item-title">{window.tools.menu[menu].string}</div>
             </div>
           </a>
           {window.tools.menu[menu].childs.as_array().map((child_menu, index) => (
           <div className="accordion-item-content">
-            <a className="item-content panel-close" href={'/tree/' + child_menu.model} data-view="#main-view">
+            <a className="item-content panel-close" href={'/' + (child_menu.view_id ? 'view' : 'tree') + '/' + (child_menu.view_id || child_menu.model)} data-view="#main-view">
               <div className="item-inner">
                 <div className="item-title">{child_menu.string}</div>
               </div>

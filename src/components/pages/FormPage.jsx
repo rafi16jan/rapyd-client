@@ -9,15 +9,16 @@ import Tree from '../Tree';
 import Footer from '../Footer';
 //import {transform as Parser} from 'babel-core';
 //import preset from '@babel/preset-react';
+import api from 'api';
 
-const customComponents = {Form, Header, Button, Sheet, Group, Field, Tree, Footer};
+const customComponents = {...window.rapydComponents, Form, Header, Button, Sheet, Group, Field, Tree, Footer};
 
 function parseView(view, model) {
   view = new DOMParser().parseFromString(view, 'text/xml').children[0];
   function recurse(elements, parent_props) {
     let components = [];
     for (let element of elements) {
-      const component = customComponents[element.tagName[0].toUpperCase() + element.tagName.toLowerCase().slice(1)] || customComponents[element.tagName] || element.tagName;
+      const component = api.hasValue(element.tagName, '-') ? element.tagName.split('-').map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase()) : null || customComponents[element.tagName[0].toUpperCase() + element.tagName.toLowerCase().slice(1)] || customComponents[element.tagName] || element.tagName;
       const props = {};
       for (let attribute of element.attributes) {
         props[attribute.name] = attribute.value;
