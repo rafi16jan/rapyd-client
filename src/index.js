@@ -40,6 +40,7 @@ window.rapydComponents = {...window.rapydComponents, ...Framework7Components, Pa
 
 // Mount React App
 (async () => {
+  //const io = await import('socket.io-client');
   await api.get_session();
   await ReactDOM.render(
     React.createElement(App),

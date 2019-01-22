@@ -7,9 +7,14 @@ PouchDB.plugin(RelationalPouch);
 window.PouchDB = PouchDB;
 window.session_db = new PouchDB('session');
 
+if (!window.rapyd_config) window.rapyd_config = {};
+
 if (!window.localStorage.rapyd_server_url) {
   if (window.rapyd_config.url) {
     window.localStorage.rapyd_server_url = window.rapyd_config.url;
+  }
+  else if (window.location.protocol === 'file:') {
+    window.localStorage.rapyd_server_url = 'http://localhost:8069';
   }
   else {
     window.localStorage.rapyd_server_url = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : ':8069');
