@@ -18,7 +18,7 @@ function parseView(view, model) {
   function recurse(elements, parent_props) {
     let components = [];
     for (let element of elements) {
-      const component = api.hasValue(element.tagName, '-') ? element.tagName.split('-').map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase()) : null || customComponents[element.tagName[0].toUpperCase() + element.tagName.toLowerCase().slice(1)] || customComponents[element.tagName] || element.tagName;
+      const component = api.hasValue(element.tagName, '-') ? element.tagName.split('-').map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase()).join('') : null || customComponents[element.tagName[0].toUpperCase() + element.tagName.toLowerCase().slice(1)] || customComponents[element.tagName] || element.tagName;
       const props = {};
       for (let attribute of element.attributes) {
         props[attribute.name] = attribute.value;
