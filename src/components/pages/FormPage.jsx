@@ -11,7 +11,7 @@ import Footer from '../Footer';
 //import preset from '@babel/preset-react';
 import api from 'api';
 
-window.rapydComponents = {...window.rapydComponents, Form, Header, Button, Sheet, Group, Field, Tree, Footer}
+window.rapydComponents = Object.assign(window.rapydComponents, {Form, Header, Button, Sheet, Group, Field, Tree, Footer});
 
 function parseView(view, model) {
   const customComponents = window.rapydComponents;
