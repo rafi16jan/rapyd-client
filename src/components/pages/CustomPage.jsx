@@ -11,8 +11,10 @@ import Footer from '../Footer';
 //import preset from '@babel/preset-react';
 import api from 'api';
 
+window.rapydComponents = {...window.rapydComponents, Form, Header, Button, Sheet, Group, Field, Tree, Footer}
+
 function parseView(view, model) {
-  const customComponents = {...window.rapydComponents, Form, Header, Button, Sheet, Group, Field, Tree, Footer};
+  const customComponents = window.rapydComponents;
   view = new DOMParser().parseFromString(view, 'text/xml').children[0];
   function recurse(elements, parent_props) {
     let components = [];
@@ -43,7 +45,7 @@ export default (props) => {
     const view_id = props.f7route.params.view_id.split('.');
     model = view_id.slice(0, -1).join('.');
     mode = view_id[view_id.length - 1];
-    window.models.env.context.active_url = props.f7route.url;     
+    window.models.env.context.active_url = props.f7route.url;
   } else {
     window.models.env.context.active_url = '/';
   }
