@@ -10,9 +10,11 @@ export default class extends React.Component {
     if (this.haveChild && this.refs.group.previousElementSibling === null) {
       return;
     }
-    setTimeout(() => {
+    setInterval(() => {
       const lastHeight = this.refs.group.previousElementSibling.clientHeight - 20;
-      this.setState({lastHeight: lastHeight});
+      if (lastHeight !== this.state.lastHeight) {
+        this.setState({lastHeight: lastHeight});
+      }
     }, 500);
   }
 
