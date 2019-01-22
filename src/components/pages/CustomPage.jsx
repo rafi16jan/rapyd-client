@@ -11,10 +11,10 @@ import Footer from '../Footer';
 //import preset from '@babel/preset-react';
 import api from 'api';
 
-window.rapydComponents = Object.assign(window.rapydComponents, {Form, Header, Button, Sheet, Group, Field, Tree, Footer});
+window.rapydComponents = {...window.rapydComponents, Form, Header, Button, Sheet, Group, Field, Tree, Footer};
 
 function parseView(view, model) {
-  const customComponents = window.rapydComponents;
+  const customComponents = {...window.rapydComponents, Form, Header, Button, Sheet, Group, Field, Tree, Footer};
   view = new DOMParser().parseFromString(view, 'text/xml').children[0];
   function recurse(elements, parent_props) {
     let components = [];
