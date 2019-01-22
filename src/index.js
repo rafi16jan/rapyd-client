@@ -36,7 +36,7 @@ Framework7.use(Framework7React);
 window.React = React;
 window.ReactDOM = ReactDOM;
 
-window.rapydComponents = {...Framework7Components, ...window.rapydComponents};
+window.rapydComponents = {...Framework7Components, ...window.rapydComponents, Page};
 
 // Mount React App
 (async () => {
