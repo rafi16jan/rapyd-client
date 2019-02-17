@@ -1,4 +1,5 @@
 import React from 'react';
+import api from 'api';
 import { Page, Navbar, NavLeft, Block, BlockTitle, List, ListItem, Icon, Toolbar, Link, Tabs, Tab } from 'framework7-react';
 
 export default class extends React.Component {
@@ -9,6 +10,7 @@ export default class extends React.Component {
   }
 
   async componentDidMount(props) {
+    api.locals.app = this.$f7;
     this.setState({'name': await window.models.env.user.browse(window.models.env.user.id.toString()).then((record) => record.name)});
   }
 

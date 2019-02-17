@@ -47,7 +47,6 @@ export default class extends React.Component {
     //fields[0].suppressSizeToFit = true;
     const records = [];
     this.state = {fields: fields, records: records, limit: 50, model: model};
-    window.c = props;
     if (props.field) {
       this.state.tree_field = props.field;
     }

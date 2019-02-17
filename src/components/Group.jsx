@@ -10,7 +10,8 @@ export default class extends React.Component {
     if (this.haveChild && this.refs.group.previousElementSibling === null) {
       return;
     }
-    setInterval(() => {
+    const interval = setInterval(() => {
+      if (!this.refs.group || !this.refs.group.previousElementSibling) return clearInterval(interval);
       const lastHeight = this.refs.group.previousElementSibling.clientHeight - 20;
       if (lastHeight !== this.state.lastHeight) {
         this.setState({lastHeight: lastHeight});
@@ -24,7 +25,7 @@ export default class extends React.Component {
       props.width = '97%';
     }
     return (
-      <div ref="group" style={{float: 'left', width: props.width || '46.5%', padding: '10px', marginTop: '20px', height: props.children ? 'auto' : this.state.lastHeight + 'px'}}>
+      <div ref="group" className="component-group" style={{float: 'left', width: props.width || '46.5%', padding: '10px', marginTop: '20px', height: props.children ? 'auto' : this.state.lastHeight + 'px'}}>
         {props.children}
       </div>
     );

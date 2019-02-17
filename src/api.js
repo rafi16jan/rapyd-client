@@ -21,6 +21,9 @@ if (!window.localStorage.rapyd_server_url) {
   }
 }
 
+const locals = {};
+window.c = locals;
+
 function preload() {
   const root = document.getElementById('app');
   if (root) {
@@ -38,8 +41,14 @@ function preload() {
         </span>
       </span>
     </div>`);
+    const backdrop = document.createElement('div');
+    backdrop.className = 'preloader-backdrop';
+    root.insertAdjacentElement('beforeend', backdrop);
     root.insertAdjacentElement('beforeend', preloader);
-    return {done: () => preloader.remove()};
+    return {done: () => {
+      preloader.remove();
+      backdrop.remove();
+    }};
   }
 }
 
@@ -64,7 +73,7 @@ async function get_session() {
     catch(error) {
       console.log(error);
     }
-    ORM(session_object);
+    await ORM(session_object);
     return {models: window.models, tools: window.tools, local_db: window.local_db};
   }
   catch(error) {
@@ -109,10 +118,39 @@ async function logout() {
   return window.location.reload();
 }
 
-function ORM(session) {
+function wait_exist(fn) {
+  return new Promise((resolve, reject) => {
+    const clear = (id) => {
+      clearInterval(id);
+      resolve();
+    }
+    const interval = setInterval(() => {if (fn()) clear(interval)}, 0);
+  });
+}
+
+async function ORM(session) {
   //window.localStorage.rapyd_server_url = session.url;
   // eslint-disable-next-line
-  new Function(session.client_js)();
+  //new Function(session.client_js)();
+  const script = document.createElement('script');
+  const URL = window.URL || window.webkitURL;
+  let blob;
+  try {
+    blob = new Blob([session.client_js]);
+  }
+  catch(error) {
+    const BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder;
+    blob = BlobBuilder();
+    blob.append(session.client_js);
+    blob = blob.getBlob();
+  }
+  script.type = 'text/javascript';
+  script.src = URL.createObjectURL(blob);
+  /*script.text = '//<![CDATA[\n';
+  script.text += session.client_js;
+  script.text += '\n//]]>';*/
+  document.body.appendChild(script);
+  await wait_exist(() => window.models);
   const tools = window.tools;
   tools.configuration = Object.assign(tools.configuration, window.rapyd_config);
   tools.configuration.url = window.localStorage.rapyd_server_url;
@@ -131,6 +169,38 @@ function ORM(session) {
       views[mode] = views[mode].replace(/([a-z]*-[a-z]*[/>\s])|([a-z]*[/>\s])/g, (string) => string.split('-').map((word) => word.slice(0, 1).toUpperCase() + word.slice(1)).join('')).replace(/>\s+|\s+</g, (s) => s.trim());
     }
   }*/
+  tools.configuration.ajax_load = (options) => {if (!options.no_preload) options.preload = preload()};
+  tools.configuration.ajax_resolve = (resolve, xhr, options) => {
+    if (!options.no_preload) options.preload.done();
+    resolve(xhr.response);
+  }
+  tools.configuration.ajax_reject = (reject, xhr, options) => {
+    if (!options.no_preload) options.preload.done();
+    reject(xhr);
+  }
+  locals.exceptionCount = 0;
+  tools.configuration.exception = (error) => {
+    /*if (locals.exceptionCount !== 0) return new Promise((resolve) => {
+      locals.exceptionCount = 0;
+      resolve(true);
+      throw error;
+    });*/
+    locals.app.dialog.alert('There are some error');
+    locals.exceptionCount += 1;
+    throw error;
+  }
+  locals.warningCount = 0;
+  tools.configuration.warning = (error, offline=false) => {
+    if (locals.warningCount !== 0) return new Promise((resolve) => {
+      locals.warningCount = 0;
+      resolve(true);
+      console.warn(error);
+    });
+    console.log(locals);
+    if (offline) locals.app.toast.create({text: 'You are offline, using local data', closeButton: true, closeTimeout: 1000}).open();
+    locals.warningCount += 1;
+    console.warn(error);
+  }
 }
 
 function ajax(type, dataType, url, data) {
@@ -192,4 +262,4 @@ function hasValue(object, value) {
   return object.indexOf(value) > -1;
 }
 
-export default {preload, get_session, login, logout, ORM, ajax, parseURI, hasValue, hasKey};
+export default {locals, preload, get_session, wait_exist, login, logout, ORM, ajax, parseURI, hasValue, hasKey};

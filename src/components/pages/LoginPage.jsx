@@ -87,6 +87,7 @@ export default class extends React.Component {
     catch(error) {
       load.done();
       app.dialog.alert('Network Error');
+      throw error;
     }
   }
 }
