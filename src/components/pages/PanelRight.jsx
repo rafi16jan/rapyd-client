@@ -32,7 +32,7 @@ export default class extends React.Component {
       <Tabs>
         <Tab id="notification" className="page-content" tabActive style={{paddingTop: '0px'}}>
           <List mediaList style={{marginTop: '0px'}}>
-            <ListItem link="#" title="Sales Order" after="17:20" text="Approval Needed"/>
+            <ListItem link="#" title="Notification Title" after="17:20" text="Notification Text"/>
           </List>
         </Tab>
         {/*<Tab id="message" className="page-content">
