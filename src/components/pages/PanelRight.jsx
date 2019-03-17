@@ -1,6 +1,6 @@
 import React from 'react';
 import api from 'api';
-import { Page, Navbar, NavLeft, Block, BlockTitle, List, ListItem, Icon, Toolbar, Link, Tabs, Tab } from 'framework7-react';
+import { Page, Navbar, NavLeft, Block, Button, BlockTitle, List, ListItem, Icon, Toolbar, Link, Tabs, Tab } from 'framework7-react';
 
 export default class extends React.Component {
   constructor(props) {
@@ -34,6 +34,7 @@ export default class extends React.Component {
           <List mediaList style={{marginTop: '0px'}}>
             <ListItem link="#" title="Notification Title" after="17:20" text="Notification Text"/>
           </List>
+          <Button fill onClick={api.logout} style={{display: 'inline-block', margin: '10px'}}>Logout</Button>
         </Tab>
         {/*<Tab id="message" className="page-content">
           <Block>

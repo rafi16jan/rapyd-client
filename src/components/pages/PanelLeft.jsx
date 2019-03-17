@@ -1,7 +1,15 @@
 import React from 'react';
-import { Page, Navbar, Button} from 'framework7-react';
+import {Page, Navbar, Link} from 'framework7-react';
 
 import api from 'api';
+
+let hide = false;
+
+function hidePanel() {
+  api.locals.app.params.panel.leftBreakpoint = hide ? 768 : 1000000;
+  api.locals.app.panel.left.initBreakpoints();
+  hide = !hide;
+}
 
 export default () => (
   <Page>
@@ -26,6 +34,6 @@ export default () => (
         </li>
       </ul>))}
     </div>
-    <Button fill onClick={api.logout} style={{display: 'inline-block', margin: '10px'}}>Logout</Button>
+    <Link iconMd="material:more_horiz" iconSize="30" onClick={hidePanel} style={{display: 'inline-block', margin: '10px'}}/>
   </Page>
 );
