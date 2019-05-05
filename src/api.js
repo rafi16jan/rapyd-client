@@ -22,7 +22,6 @@ if (!window.localStorage.rapyd_server_url) {
 }
 
 const locals = {};
-window.c = locals;
 
 function preload() {
   const root = document.getElementById('app');

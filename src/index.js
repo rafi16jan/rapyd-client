@@ -15,6 +15,8 @@ import App from './components/App.jsx';
 
 import Page from './components/Page.jsx';
 
+import Flatpickr from './components/Flatpickr.jsx';
+
 // Framework7 styles
 import 'framework7/css/framework7.min.css';
 
@@ -36,7 +38,7 @@ Framework7.use(Framework7React);
 window.React = React;
 window.ReactDOM = ReactDOM;
 
-window.rapydComponents = {...Framework7Components, ...window.rapydComponents, Page};
+window.rapydComponents = {...Framework7Components, ...window.rapydComponents, Page, Flatpickr};
 
 // Mount React App
 (async () => {
