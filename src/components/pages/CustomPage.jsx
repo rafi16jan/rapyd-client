@@ -20,7 +20,7 @@ function parseView(view, model) {
     let components = [];
     for (let element of elements) {
       const component = api.hasValue(element.tagName, '-') ? customComponents[element.tagName.split('-').map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase()).join('')] : null || customComponents[element.tagName[0].toUpperCase() + element.tagName.toLowerCase().slice(1)] || customComponents[element.tagName] || element.tagName;
-      const props = {};
+      const props = {model};
       for (let attribute of element.attributes) {
         props[attribute.name] = attribute.value;
       }

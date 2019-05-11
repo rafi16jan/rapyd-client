@@ -81,6 +81,11 @@ async function get_session() {
   }
 }
 
+async function update_session(new_session) {
+  const session = await window.session_db.get('session');
+  return await window.session_db.put({...session, ...new_session});
+}
+
 async function login(args) {
   args.encrypted = args.encrypted ? true: false;
   const session = await ajax('post', 'json', window.localStorage.rapyd_server_url + '/api/login', args);
@@ -261,4 +266,4 @@ function hasValue(object, value) {
   return object.indexOf(value) > -1;
 }
 
-export default {locals, preload, get_session, wait_exist, login, logout, ORM, ajax, parseURI, hasValue, hasKey};
+export default {locals, preload, get_session, update_session, wait_exist, login, logout, ORM, ajax, parseURI, hasValue, hasKey};

@@ -7,13 +7,13 @@ import Field from '../Field';
 
 const customComponents = {Tree, Field};
 
-function parseView(view) {
+function parseView(view, model) {
   view = new DOMParser().parseFromString(view, 'text/xml').children[0];
   function recurse(elements) {
     let components = [];
     for (let element of elements) {
       const component = customComponents[element.tagName[0].toUpperCase() + element.tagName.toLowerCase().slice(1)] || customComponents[element.tagName] || element.tagName;
-      const props = {};
+      const props = {model};
       for (let attribute of element.attributes) {
         props[attribute.name] = attribute.value;
       }
@@ -44,7 +44,7 @@ export default (props) => {
   if (!cachedViews[view]) {
     // eslint-disable-next-line
     //cachedViews[view] = evals(Parser(view, {presets: [preset]}).code);
-    cachedViews[view] = parseView(view);
+    cachedViews[view] = parseView(view, model);
   }
 
   return cachedViews[view];

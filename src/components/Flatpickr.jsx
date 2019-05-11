@@ -16,7 +16,7 @@ export default class extends React.Component {
       this.refs.flatpickr.insertAdjacentElement('afterend', clone);
     }
     let onChange = this.props.onChange;
-    if (this.props.readOnly) onChange = (value) => value != this.props.defaultDate && (this.props.defaultDate ? this.flatpickr.setDate(this.props.defaultDate) : this.flatpickr.clear());
+    if (this.props.readOnly) onChange = (value) => value !== this.props.defaultDate && (this.props.defaultDate ? this.flatpickr.setDate(this.props.defaultDate) : this.flatpickr.clear());
     this.flatpickr = flatpickr(clone, {...this.props, onChange: async (value) => {await onChange(value); this.flatpickr.open()}});
   }
 
@@ -24,7 +24,7 @@ export default class extends React.Component {
     if (this.props.customInput) this.componentDidMount();
     if (!this.flatpickr) return;
     let onChange = this.props.onChange;
-    if (this.props.readOnly) onChange = (value) => value != this.props.defaultDate && (this.props.defaultDate ? this.flatpickr.setDate(this.props.defaultDate) : this.flatpickr.clear());
+    if (this.props.readOnly) onChange = (value) => value !== this.props.defaultDate && (this.props.defaultDate ? this.flatpickr.setDate(this.props.defaultDate) : this.flatpickr.clear());
     this.flatpickr.set('onChange', async (value) => {await onChange(value); this.flatpickr.open()});
     this.flatpickr.setDate(this.props.defaultDate);
   }
