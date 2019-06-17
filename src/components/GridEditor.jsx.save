@@ -1,0 +1,26 @@
+import React, { Component } from 'react'; import Field from './Field';
+
+export default class extends Component {
+  componentDidMount() {
+    window.e = refs;
+    if (this.refs.selectivity && this.refs.selectivity.selectivity) this.refs.selectivity.selectivity.open();
+  }
+
+  getValue() {
+    if (this.refs.selectivity && this.refs.selectivity.selectivity) {
+      const value = this.refs.selectivity.selectivity.getData();
+      if (!value) return value;
+      if (!Array.isArray(value)) return value.text;
+      return value.map((data) => data.text).join(', '); 
+    }
+  }
+
+  render(props) {
+    console.log(props);
+    //const field = props.field_object;
+    //delete props.field_object;
+    this.refs = {};
+    const component = (<Field {...props} ref_object={this.refs} cellEdit={true}/>);
+    return component;
+  }
+}
