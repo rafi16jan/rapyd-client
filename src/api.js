@@ -1,12 +1,12 @@
 import PouchDB from 'pouchdb-browser';
 import PouchFind from 'pouchdb-find';
-import PouchSearch from 'pouchdb-quick-search';
+//import PouchSearch from 'pouchdb-quick-search';
 import RelationalPouch from 'relational-pouch';
 
 PouchDB.plugin(PouchFind);
-PouchDB.plugin(PouchSearch);
+//PouchDB.plugin(PouchSearch);
 PouchDB.plugin(RelationalPouch);
-PouchDB.plugin(require('pouchdb-debug').default);
+//PouchDB.plugin(require('pouchdb-debug').default);
 window.PouchDB = PouchDB;
 window.session_db = new PouchDB('session');
 
@@ -326,6 +326,7 @@ function hasValue(object, value) {
       for (let value of arg[2]) {
         promises.push(db.find({selector: {[arg[0]]: {$eq: value}}, fields: ['_id']}));
       }
+      if (!arg[2].length) return new Promise((resolve, reject) => resolve([]));
     }
     else if (arg[1] === 'not in' && Array.isArray(arg[2])) {
       if (arg[2].length) need_orm = true;
@@ -336,12 +337,12 @@ function hasValue(object, value) {
     }
     else if (arg[1] === 'like') {
       selectors[arg[0]]['$gte'] = arg[2];
-      promises.push(db.search({query: arg[2], fields: [arg[0]], include_docs: false}));
+      //promises.push(db.search({query: arg[2], fields: [arg[0]], include_docs: false}));
       need_orm = true;
     }
     else if (arg[1] === 'ilike') {
       selectors[arg[0]]['$gte'] = arg[2];
-      promises.push(db.search({query: arg[2], fields: [arg[0]], include_docs: false}));
+      //promises.push(db.search({query: arg[2], fields: [arg[0]], include_docs: false}));
       need_orm = true;
     }
     if (!Object.keys(selectors[arg[0]]).length) {
