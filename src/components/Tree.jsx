@@ -251,7 +251,7 @@ export default class Tree extends React.Component {
         if (!this.args) this.args = [];
         this.args.push(['id', 'not in', this.state.active_ids]);
       }
-      const args = (this.state.tree_field ? [!this.props.parent_model && [this.state.tree_field, 'in', window.models.env.context.active_ids || []] || ['id', 'in', window.models.env.context.active_id[this.state.tree_field] || []]] : []);
+      const args = (this.props.field_name ? [['id', 'in', window.models.env.context.active_id[this.props.field_name] || []]] : []);
       if (this.args) args.push(...this.args);
       models.env.context.active_limit = this.state.limit;
       models.env.context.active_index = index;
