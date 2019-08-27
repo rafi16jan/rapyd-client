@@ -7,10 +7,6 @@ import csv from 'csv.js';
 import FileSaver from 'file-saver';
 import api from 'api';
 
-function isOverflown(element) {
-  return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
-}
-
 function autoSizeAll(gridOptions, listener) {
   if (this) {
     this.gridOptions = gridOptions;
@@ -23,22 +19,28 @@ function autoSizeAll(gridOptions, listener) {
     return;
   }*/
   //let grid = gridOptions.api
+  if (document.getElementById('rapyd-maximum-tree-width')) document.getElementById('rapyd-maximum-tree-width').remove();
+  const div = gridOptions.api.gridCore.eGridDiv;
+  const overflown = Array.prototype.slice.call(div.querySelectorAll('span.ag-header-cell-text')).find((element) => element.offsetWidth < element.scrollWidth);
   let availableWidth = gridOptions.api.gridPanel.getWidthForSizeColsToFit();
   let columns = gridOptions.api.gridPanel.columnController.getAllDisplayedColumns();
   let usedWidth = gridOptions.api.gridPanel.columnController.getWidthOfColsInList(columns);
-  if (true) {
-    const maxWidth = Math.max(...Array.prototype.slice.call(document.querySelectorAll('div.ag-header-row')).filter((element) => element.offsetParent).map((element) => parseFloat(element.style.width.replace('px', ''))));
-    const style = document.getElementById('rapyd-maximum-tree-width') || document.createElement('style');
-    style.id = 'rapyd-maximum-tree-width';
-    style.innerHTML = '.rapyd-card-sheet {min-width: ' + (maxWidth + 20) + 'px}';
-    document.querySelector('head').append(style);
-  }
-  if (usedWidth <= availableWidth + 6) return gridOptions.api.sizeColumnsToFit();
+  if (!overflown) return gridOptions.api.sizeColumnsToFit();
   const allColumnIds = [];
   gridOptions.columnApi.getAllColumns().forEach(function(column) {
     allColumnIds.push(column.colId);
   });
   gridOptions.columnApi.autoSizeColumns(allColumnIds);
+  if (true) {
+    (async () => {
+      await api.wait(100);
+      const maxWidth = Math.max(...Array.prototype.slice.call(document.querySelectorAll('div.ag-header-row')).filter((element) => element.offsetParent).map((element) => parseFloat(element.style.width.replace('px', ''))));
+      const style = document.getElementById('rapyd-maximum-tree-width') || document.createElement('style');
+      style.id = 'rapyd-maximum-tree-width';
+      style.innerHTML = '.rapyd-card-sheet {min-width: ' + (maxWidth) + 'px}';
+      document.querySelector('head').append(style);
+    })();
+  }
 }
 
 export default class Tree extends React.Component {
@@ -456,7 +458,7 @@ export default class Tree extends React.Component {
         {!props.isTreeView && (props.parent_model || choose) &&
         <Popup ref="popup_modal" backdrop={false} animate={true}>{/* opened={this.state.popupOpened} onPopupClosed={() => this.setState({popupOpened : false})}>*/}
           <Page popup title={window.tools.view[this.state.model] ? window.tools.view[this.state.model].string : 'Choose'}>
-            <div className="card">
+            <div className="card rapyd-card-sheet">
               <Tree ref="popup" isTreeView isPopup many2many={!!props.parent_model} parent_tree={this} active_field={this.state.tree_field} active_field_name={props.field_name} model={this.state.model} domain={(this.state.records.length > 0 ? [['id', 'not in', window.models.env.context.active_lines[props.model][(this.props.parent_model ? 'many2many_' : '') + this.state.tree_field].ids]] : []).concat(props.domain ? props.domain(models.env.context.active_id) : [])}>
                 {Array.prototype.slice.call(new DOMParser().parseFromString((window.tools.view[this.state.model] && window.tools.view[this.state.model].tree) || props.tree_arch || '<tree><field name="' + (window.models.env[this.state.model]._rec_name || 'name') + '"/></tree>', 'text/xml').children[0].children).map((element) => {
                   const props = {model};
@@ -479,7 +481,7 @@ export default class Tree extends React.Component {
     }
     return (
       <Page title={props.title || window.tools.view[this.state.model].string}>
-        <div className="card">
+        <div className="card rapyd-card-sheet">
           <div className="card-header">
             <div className="data-table-title">
               {props.title || window.tools.view[this.state.model].string}
