@@ -13,27 +13,27 @@ function autoSizeAll(gridOptions, listener) {
     for (let column of gridOptions.api.gridCore.gridOptions.columnDefs) {
       gridOptions.api.getFilterInstance(column.field).eClearButton.addEventListener('click', () => gridOptions.api.onFilterChanged());
     }
+    //let columns = gridOptions.api.gridPanel.columnController.getAllDisplayedColumns();
+    //let usedWidth = gridOptions.api.gridPanel.columnController.getWidthOfColsInList(columns);
   }
-  /*if (listener && !gridOptions.api.gridCore.eGridDiv.parentElement) {
-    window.removeEventListener('resize', listener);
-    return;
-  }*/
-  //let grid = gridOptions.api
-  if (document.getElementById('rapyd-maximum-tree-width')) document.getElementById('rapyd-maximum-tree-width').remove();
+  if (document.getElementById('rapyd-maximum-tree-width')) /*(clone = document.getElementById('rapyd-maximum-tree-width').cloneNode()) && */document.getElementById('rapyd-maximum-tree-width').remove();
   const div = gridOptions.api.gridCore.eGridDiv;
   const overflown = Array.prototype.slice.call(div.querySelectorAll('span.ag-header-cell-text')).find((element) => element.offsetWidth < element.scrollWidth);
-  let availableWidth = gridOptions.api.gridPanel.getWidthForSizeColsToFit();
-  let columns = gridOptions.api.gridPanel.columnController.getAllDisplayedColumns();
-  let usedWidth = gridOptions.api.gridPanel.columnController.getWidthOfColsInList(columns);
-  if (!overflown) return gridOptions.api.sizeColumnsToFit();
-  const allColumnIds = [];
-  gridOptions.columnApi.getAllColumns().forEach(function(column) {
-    allColumnIds.push(column.colId);
-  });
-  gridOptions.columnApi.autoSizeColumns(allColumnIds);
+  //let availableWidth = gridOptions.api.gridPanel.getWidthForSizeColsToFit();
+  if (!overflown) {
+    gridOptions.api.sizeColumnsToFit();
+    //if (clone) document.querySelector('head').append(clone);
+    return;
+  }
+  //if (clone) document.querySelector('head').append(clone);
   if (true) {
     (async () => {
-      await api.wait(100);
+      await api.wait(200);
+      const allColumnIds = [];
+      gridOptions.columnApi.getAllColumns().forEach(function(column) {
+        allColumnIds.push(column.colId);
+      });
+      gridOptions.columnApi.autoSizeColumns(allColumnIds);
       const maxWidth = Math.max(...Array.prototype.slice.call(document.querySelectorAll('div.ag-header-row')).filter((element) => element.offsetParent).map((element) => parseFloat(element.style.width.replace('px', ''))));
       const style = document.getElementById('rapyd-maximum-tree-width') || document.createElement('style');
       style.id = 'rapyd-maximum-tree-width';
@@ -138,7 +138,11 @@ export default class Tree extends React.Component {
   }
 
   componentDidUpdate() {
-    if (this.gridOptions) autoSizeAll(this.gridOptions);
+    if (this.gridOptions) {
+      if (window.innerWidth === this.lastWidth) return;
+      else this.lastWidth = window.innerWidth;
+      autoSizeAll(this.gridOptions);
+    }
   }
 
   componentDidMount() {
